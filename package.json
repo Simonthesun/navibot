@@ -1,6 +1,6 @@
 {
     "name": "navi-bot",
-    "version": "0.0.1",
+    "version": "0.1.3",
     "description": "Created for Cool Survivor: Hyrule",
     "main": "bot.js",
     "author": "simonthesun",

@@ -65,8 +65,8 @@ function run_command(message) {
 			// list all players in the db
 			case 'listplayers':
 				for (let [player, stamina] of players) {
-					if (message.guild.members.has(player)) {
-						message.channel.send(`${message.guild.members.get(player).displayName}, ${stamina[0]} of ${stamina[2]} stamina, ${stamina[1].length} item(s), ${stamina[3]} ${currency_name}`);
+					if (message.guild.members.cache.has(player)) {
+						message.channel.send(`${message.guild.members.cache.get(player).displayName}, ${stamina[0]} of ${stamina[2]} stamina, ${stamina[1].length} item(s), ${stamina[3]} ${currency_name}`);
 					} else {
 						message.channel.send(`Player not in server (ID ${player}), ${stamina[0]} of ${stamina[2]} stamina, ${stamina[1].length} item(s), ${stamina[3]} ${currency_name}`);
 					}
@@ -94,8 +94,8 @@ function run_command(message) {
 						map.set(cur.id, paths);
 						message.channel.send(`${cur.name} linked to ${channel.name} in the ${direction} direction.`)
 							.then(msg => {
-								msg.delete(5000);
-								message.delete(5000);
+								msg.delete({timeout: 5000});
+								message.delete({timeout: 5000});
 							})
 							.catch(console.error);
 					}
@@ -121,10 +121,10 @@ function run_command(message) {
 							if (channels.has(channel[0])) {
 								delete paths[direction];
 								map.set(cur.id, paths);
-								message.channel.send(`Path to ${message.guild.channels.get(channel[0])} deleted.`)
+								message.channel.send(`Path to ${message.guild.channels.cache.get(channel[0])} deleted.`)
 									.then(msg => {
-										msg.delete(5000);
-										message.delete(5000);
+										msg.delete({timeout: 5000});
+										message.delete({timeout: 5000});
 									})
 									.catch(console.error);
 								hasPath = true;
@@ -157,8 +157,8 @@ function run_command(message) {
 						map.set(cur.id, paths);
 						message.channel.send(`${cur.name} linked to ${channel.name} through the use of ${item}.`)
 							.then(msg => {
-								msg.delete(5000);
-								message.delete(5000);
+								msg.delete({timeout: 5000});
+								message.delete({timeout: 5000});
 							})
 							.catch(console.error);
 					}
@@ -178,8 +178,8 @@ function run_command(message) {
 
 					message.channel.send(`${item} added to channel ${cur.name}`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 				} else {
@@ -198,8 +198,8 @@ function run_command(message) {
 
 						message.channel.send(`${item} removed from channel ${cur.name}`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 					}
@@ -233,7 +233,7 @@ function run_command(message) {
 			// list all items currently on map
 			case 'listitems':
 				for (let [ch, item] of items) {
-					message.channel.send(`${item}, in channel ${message.guild.channels.get(ch).name}`);
+					message.channel.send(`${item}, in channel ${message.guild.channels.cache.get(ch).name}`);
 				}
 
 				message.channel.send(`**--END OF ITEMS--**`);
@@ -242,13 +242,13 @@ function run_command(message) {
 			// display all paths
 			case 'map':
 				for (let [id, paths] of map) {
-					let channel = message.guild.channels.get(id);
+					let channel = message.guild.channels.cache.get(id);
 					message.channel.send(`**${channel} has the following paths:**`)
 
 					let entries = Object.entries(paths);
 
 					for (let [direction, linked] of entries) {
-						message.channel.send(`${direction}: ${message.guild.channels.get(linked[0])}, ${linked[1]} ${currency_name}`);
+						message.channel.send(`${direction}: ${message.guild.channels.cache.get(linked[0])}, ${linked[1]} ${currency_name}`);
 					}
 				}
 
@@ -267,7 +267,7 @@ function run_command(message) {
 					let entries = Object.entries(paths);
 
 					for (let [direction, linked] of entries) {
-						message.channel.send(`${direction}: ${message.guild.channels.get(linked[0])}, ${linked[1]} ${currency_name}`);
+						message.channel.send(`${direction}: ${message.guild.channels.cache.get(linked[0])}, ${linked[1]} ${currency_name}`);
 					}
 
 					message.channel.send(`**--END OF PATHS--**`)
@@ -366,8 +366,8 @@ function run_command(message) {
 
 					message.channel.send(`${amount} ${currency_name} assigned to channel ${cur.name}`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 				} else {
@@ -383,8 +383,8 @@ function run_command(message) {
 						currency_map.delete(cur.id);
 						message.channel.send(`Currency cleared from channel ${cur.name}`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 					}
@@ -412,8 +412,8 @@ function run_command(message) {
 						map.set(cur.id, paths);
 						message.channel.send(`${cur.name} linked to ${channel.name} in the ${direction} direction with cost of ${cost} ${currency_name}.`)
 							.then(msg => {
-								msg.delete(5000);
-								message.delete(5000);
+								msg.delete({timeout: 5000});
+								message.delete({timeout: 5000});
 							})
 							.catch(console.error);
 					}
@@ -425,7 +425,7 @@ function run_command(message) {
 
 			case 'currencymap':
 				for (let [id, currency_data] of currency_map) {
-					let channel = message.guild.channels.get(id);
+					let channel = message.guild.channels.cache.get(id);
 					message.channel.send(`**${channel} has ${currency_data[0]} ${currency_name}**, and has been visited by ${currency_data[1].length} player(s)`)
 				}
 
@@ -441,8 +441,8 @@ function run_command(message) {
 
 					message.channel.send(`Home set to ${current.name}`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 				} else {
@@ -606,11 +606,11 @@ function run_command(message) {
 									if (cost > players.get(player.id)[3]) {
 										message.channel.send(`You do not have enough ${currency_name} to travel towards direction ${direction}`)
 									} else {
-										let destination = message.guild.channels.get(paths[direction][0]);
+										let destination = message.guild.channels.cache.get(paths[direction][0]);
 
 										players.set(player.id, [players.get(player.id)[0] - 1, players.get(player.id)[1], players.get(player.id)[2], players.get(player.id)[3] - cost]);
 
-										destination.overwritePermissions(player, {
+										destination.createOverwrite(player, {
 											VIEW_CHANNEL: true,
 											SEND_MESSAGES: true,
 											READ_MESSAGE_HISTORY: true
@@ -618,8 +618,8 @@ function run_command(message) {
 										.then(() => {
 											message.channel.send(`${player} successfully moved ${direction}`)
 												.then(msg => {
-													msg.delete(5000);
-													message.delete(5000);
+													msg.delete({timeout: 5000});
+													message.delete({timeout: 5000});
 												})
 												.catch(console.error);
 
@@ -659,14 +659,14 @@ function run_command(message) {
 					let paths = map.get(message.channel.id);
 
 					if (paths.hasOwnProperty(item)) {
-						let destination = message.guild.channels.get(paths[item][0]);
+						let destination = message.guild.channels.cache.get(paths[item][0]);
 
 						if (players.get(player.id)[1].includes(item)) {
 							// let inventory = players.get(player.id)[1];
 
 							// players.set(player.id, [players.get(player.id)[0], inventory.splice(inventory.indexOf(item), 1), players.get(player.id)[2], players.get(player.id)[3]]);
 
-							destination.overwritePermissions(player, {
+							destination.createOverwrite(player, {
 								VIEW_CHANNEL: true,
 								SEND_MESSAGES: true,
 								READ_MESSAGE_HISTORY: true
@@ -674,8 +674,8 @@ function run_command(message) {
 							.then(() => {
 								message.channel.send(`${player} successfully used ${item}`)
 									.then(msg => {
-										msg.delete(5000);
-										message.delete(5000);
+										msg.delete({timeout: 5000});
+										message.delete({timeout: 5000});
 									})
 									.catch(console.error);
 
@@ -710,8 +710,8 @@ function run_command(message) {
 
 					message.channel.send(`${items.get(cur.id)} added to inventory.`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 				}
@@ -746,8 +746,8 @@ function run_command(message) {
 
 										message.channel.send(`${player} gave ${item} to ${member}`)
 											.then(msg => {
-												msg.delete(5000);
-												message.delete(5000);
+												msg.delete({timeout: 5000});
+												message.delete({timeout: 5000});
 											})
 											.catch(console.error);
 									}
@@ -771,8 +771,8 @@ function run_command(message) {
 
 								message.channel.send(`Gave ${item} to ${member}`)
 									.then(msg => {
-										msg.delete(5000);
-										message.delete(5000);
+										msg.delete({timeout: 5000});
+										message.delete({timeout: 5000});
 									})
 									.catch(console.error);
 							}
@@ -807,8 +807,8 @@ function run_command(message) {
 
 						message.channel.send(`${amount} ${currency_name} added to wallet.`)
 							.then(msg => {
-								msg.delete(5000);
-								message.delete(5000);
+								msg.delete({timeout: 5000});
+								message.delete({timeout: 5000});
 							})
 							.catch(console.error);
 					}
@@ -838,8 +838,8 @@ function run_command(message) {
 
 								message.channel.send(`${player} gave ${amount} ${currency_name} to ${member}`)
 									.then(msg => {
-										msg.delete(5000);
-										message.delete(5000);
+										msg.delete({timeout: 5000});
+										message.delete({timeout: 5000});
 									})
 									.catch(console.error);
 							} else {
@@ -864,22 +864,22 @@ function run_command(message) {
 				if (map.has(home)) {
 					let cur = message.channel;
 					let player = message.member;
-					let destination = message.guild.channels.get(home);
+					let destination = message.guild.channels.cache.get(home);
 
 					if (players.get(player.id)[0] >= 3) {
 
 						players.set(player.id, [players.get(player.id)[0] - 3, players.get(player.id)[1], players.get(player.id)[2], players.get(player.id)[3]]);
 
-						destination.overwritePermissions(player, {
+						destination.createOverwrite(player, {
 							VIEW_CHANNEL: true,
 							SEND_MESSAGES: true,
 							READ_MESSAGE_HISTORY: true
 						})
 						.then(() => {
-							message.channel.send(`${player} successfully returned to ${message.guild.channels.get(home).name}`)
+							message.channel.send(`${player} successfully returned to ${message.guild.channels.cache.get(home).name}`)
 								.then(msg => {
-									msg.delete(5000);
-									message.delete(5000);
+									msg.delete({timeout: 5000});
+									message.delete({timeout: 5000});
 								})
 								.catch(console.error);
 
@@ -903,8 +903,8 @@ function run_command(message) {
 			if (players.has(message.member.id)) {
 				message.channel.send(`You have ${players.get(message.member.id)[0]} stamina remaining`)
 					.then(msg => {
-						msg.delete(5000);
-						message.delete(5000);
+						msg.delete({timeout: 5000});
+						message.delete({timeout: 5000});
 					})
 					.catch(console.error);
 			} else {
@@ -918,15 +918,15 @@ function run_command(message) {
 				if (players.get(message.member.id)[1].length == 0) {
 					message.channel.send(`Your inventory is empty!`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 				} else {
 					message.channel.send(`You have ${players.get(message.member.id)[1].toString()} in your inventory`)
 						.then(msg => {
-							msg.delete(5000);
-							message.delete(5000);
+							msg.delete({timeout: 5000});
+							message.delete({timeout: 5000});
 						})
 						.catch(console.error);
 				}
@@ -955,8 +955,8 @@ function run_command(message) {
 			if (players.has(message.member.id)) {
 				message.channel.send(`You currently have ${players.get(message.member.id)[3]} ${currency_name}`)
 					.then(msg => {
-						msg.delete(5000);
-						message.delete(5000);
+						msg.delete({timeout: 5000});
+						message.delete({timeout: 5000});
 					})
 					.catch(console.error);
 			} else {

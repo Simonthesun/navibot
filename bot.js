@@ -656,37 +656,42 @@ function run_command(message) {
 					let itemExists = false;
 					let player = message.member;
 					let cur = message.channel;
-					let paths = map.get(message.channel.id);
 
-					if (paths.hasOwnProperty(item)) {
-						let destination = message.guild.channels.cache.get(paths[item][0]);
+					if (map.has(cur.id)) {
+						let paths = map.get(cur.id);
 
-						if (players.get(player.id)[1].includes(item)) {
-							// let inventory = players.get(player.id)[1];
+						if (paths.hasOwnProperty(item)) {
+							let destination = message.guild.channels.cache.get(paths[item][0]);
 
-							// players.set(player.id, [players.get(player.id)[0], inventory.splice(inventory.indexOf(item), 1), players.get(player.id)[2], players.get(player.id)[3]]);
+							if (players.get(player.id)[1].includes(item)) {
+								// let inventory = players.get(player.id)[1];
 
-							destination.createOverwrite(player, {
-								VIEW_CHANNEL: true,
-								SEND_MESSAGES: true,
-								READ_MESSAGE_HISTORY: true
-							})
-							.then(() => {
-								message.channel.send(`${player} successfully used ${item}`)
-									.then(msg => {
-										msg.delete({timeout: 5000});
-										message.delete({timeout: 5000});
-									})
-									.catch(console.error);
+								// players.set(player.id, [players.get(player.id)[0], inventory.splice(inventory.indexOf(item), 1), players.get(player.id)[2], players.get(player.id)[3]]);
 
-								cur.permissionOverwrites.get(player.id).delete();
-							})
-							.catch(console.error);
+								destination.createOverwrite(player, {
+									VIEW_CHANNEL: true,
+									SEND_MESSAGES: true,
+									READ_MESSAGE_HISTORY: true
+								})
+								.then(() => {
+									message.channel.send(`${player} successfully used ${item}`)
+										.then(msg => {
+											msg.delete({timeout: 5000});
+											message.delete({timeout: 5000});
+										})
+										.catch(console.error);
+
+									cur.permissionOverwrites.get(player.id).delete();
+								})
+								.catch(console.error);
+							} else {
+								message.channel.send(`${item} is not in your inventory`);
+							}
 						} else {
-							message.channel.send(`${item} is not in your inventory`);
+							message.channel.send(`${item} cannot be used here`);
 						}
 					} else {
-						message.channel.send(`${item} cannot be used here`);
+						message.channel.send(`${cur} is not on the map`);
 					}
 				} else {
 					message.channel.send(`${message.member} is not in database`);

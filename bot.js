@@ -599,7 +599,12 @@ function run_command(message) {
 
 							if (paths.hasOwnProperty(direction)) {
 								if (item_array.includes(direction)) {
-									message.channel.send(`You cannot travel towards direction ${direction}`);
+									message.channel.send(`You cannot travel towards direction ${direction}`)
+										.then(msg => {
+											msg.delete({timeout: 5000});
+											message.delete({timeout: 5000});
+										})
+										.catch(console.error);
 								} else {
 									let cost = paths[direction][1];
 
@@ -630,7 +635,12 @@ function run_command(message) {
 								}
 								
 							} else {
-								message.channel.send(`You cannot travel towards direction ${direction}`);
+								message.channel.send(`You cannot travel towards direction ${direction}`)
+									.then(msg => {
+										msg.delete({timeout: 5000});
+										message.delete({timeout: 5000});
+									})
+									.catch(console.error);
 							}
 						} else {
 							message.channel.send(`${cur} is not on the map`);
